@@ -1,0 +1,15 @@
+
+.wrapper {
+	max-width: 75%;
+}
+
+
+.page-heading {
+	margin-top: 1em;
+	font-size: xx-large;
+	text-align: center;
+}
+
+.post-list h2 {
+	font-size: large;
+}

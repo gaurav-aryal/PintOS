@@ -1,0 +1,16 @@
+sub T2H_InitGlobals
+{
+    # Set the default body text, inserted between <BODY ... >
+    $T2H_BODYTEXT = '';
+    # text inserted after <BODY ...>
+    $T2H_AFTER_BODY_OPEN = '<header class="site-header" role="banner"><div class="wrapper"><a class="site-title" rel="author" href="http://cs.usm.maine.edu/~houser/pintos">USM COS 450 Operating Systems -- Pintos Documentation</a></div></header><main class="page-content" aria-label="Content"><div class="wrapper">';
+    #text inserted before </BODY>
+    $T2H_PRE_BODY_CLOSE = '</div></main>';
+    # this is used in footer
+    $T2H_ADDRESS = "<I>$T2H_USER</I> " if $T2H_USER;
+    $T2H_ADDRESS .= "on <I>$T2H_TODAY</I>";
+    # this is added inside <HEAD></HEAD> after <TITLE> and some META NAME stuff
+    # can be used for <style> <script>, <meta> tags
+    $T2H_EXTRA_HEAD = '<LINK REL="stylesheet" HREF="../assets/main.css"><LINK REL="stylesheet" HREF="cos450.css"><LINK REL="stylesheet" HREF="pintos.css">';
+}
+1;

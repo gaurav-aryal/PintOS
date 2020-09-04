@@ -1,0 +1,127 @@
+@c Local settings
+
+@set coursenumber COS 450
+@set localpintostarpath /usr/class/cos450/pintos.tar.gz
+@set localpintoshttppath http://@/cs.usm.maine.edu/@/~houser/@/cos450/@/pintos.@/tar.gz
+@set localpintosbindir /usr/class/cos450/bin
+@set localpintosgit http://github.com/USM-COS450-F20/pintos-groupname.git
+@set gitrepo git://pintos-os.org/pintos-anon
+
+@set recommendgit
+@clear recommendcvs
+@set recommendvnc
+@set recommendgit
+@clear recommendcygwin
+@clear recommendcvs
+
+@macro localmachines{}
+You can either use the Linux workstations in the USM CS Lab (Science Building)
+or use the preconfigured Linux Virtual Machine (VM) to do your assignments.
+The process for compiling, debugging, and submitting your work will be nearly identical 
+on both configurations once you get things set up.
+
+If you choose to use the USM CS Lab computers, connecting them is described on the 
+@uref{http://usm.maine.edu/cos/unix-lab-guide, CS department webpage}.
+After you are logged in, to access the tools you need for the assignments, 
+you need to add them to your executuion @code{PATH}. You can do so with this command:
+@example
+export PATH=@value{localpintosbindir}:$PATH
+@end example
+@noindent
+It is a good idea to add this line to the @file{~/.bashrc} or @file{~/.profile} file
+in your home directory. Otherwise, you'll have to type it every time
+you log in. You should also add the following to your @file{~/.gdbinit} file
+to include some very helpful @code{gdb} macros for debugging.
+@example
+source /usr/class/cos450/bin/gdb-macros
+@end example
+
+If you choose instead to setup and work from a Virtual Machine (VM) on your own 
+computer,  you will need virtual machine software, like 
+@uref{https://virtualbox.org, VirtualBox}. 
+VirtualBox is free and runs on macOS, Windows, or Linux. VirtualBox also provides
+file and folder sharing between your computer and the virtual computer which
+can make your edit, debug, test process very fluid. We have created a custom
+VM Image (@file{/usr/class/cos450/pintos-dev.ova}) that you can copy and import into 
+your VM software and be up and running in minutes. The basic procedure to get
+running is as follows:
+
+@enumerate
+@item Copy and import @file{/usr/class/cos450/pintos-dev.ova} into your VM software
+@item Check the settings (specifically the network adapter to make sure it can access the Internet) and start the virtual machine
+@item Login as the user @code{pintos} with the password @code{cos450}
+@end enumerate
+
+NOTE: The preconfigured VM already has the @code{PATH} and @file{~/.gdbinit} 
+changes made for you.
+
+
+@end macro
+
+@macro localpathsetup{}
+@end macro
+
+@macro localcrossbuild{}
+Watch the commands executed during the build.  On the Linux machines,
+the ordinary system tools are used.
+@end macro
+
+@macro localhonorcodepolicy{}
+In the context of USM's COS 450 course, please respect the spirit
+and the letter of the honor code by refraining from reading any homework
+solutions available online or elsewhere.  Reading the source code for
+other operating system kernels, such as Linux or FreeBSD, is allowed,
+but do not copy code from them literally.  Please cite the code that
+inspired your own in your design documentation.
+@end macro
+
+@macro localcredits{}
+Local changes for Computer Science at the University of Southern Maine
+by Stephen Houser @email{houser@@usm.maine.edu}.
+@end macro
+
+@macro localcvspolicy{}
+Instead, we recommend integrating your team's changes early and often,
+using a source code control system such as Git (@pxref{Git}).
+This is less likely to produce surprises, because everyone can see
+everyone else's code as it is written, instead of just when it is
+finished.  Source code control systems also make it possible to review 
+changes and, when a change introduces a bug, drop back to working 
+versions of code.
+@end macro
+
+@macro localcodingstandards{}
+All of you should have taken a class like COS 160, so we expect you to be
+familiar with some set of coding standards such as 
+@uref{http://stephenhouser.com/cos450, USM CS Coding Standards}. 
+Even if you've taken COS 160, we recommend
+reviewing that document.  We expect code at the ``Peer-Review Quality''
+level described there.
+@end macro
+
+@macro localdevelopmenttools{}
+@c Descriptions of additional, local development tools can be inserted here
+@end macro
+
+@macro localsubmission{}
+
+Your source code will be submitted via @code{git push} command to your groups 
+@uref{https://classroom.github.com, GitHub Classroom} repository.
+
+The design document should be a copy of the correct template with all
+sections completed. It should be named exactly @file{DESIGNDOC} and located
+in the proper directory as specified in the assignment instructions.
+
+@enumerate
+@item @code{make clean} in your @file{pintos/src} directory.
+@item @code{git tag project1} to tag your code for each project
+@item @code{git push --follow-tags origin} to push your code (and tags) to GitHub.
+@end enumerate
+
+Following these instructions ensures that we can use scripts to
+extract, build, and grade your project. The penalty for violating the
+instructions is a 10 point deduction; we will give you two warnings
+where you can resubmit your project.
+
+@end macro
+
