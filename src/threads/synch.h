@@ -44,7 +44,6 @@ void cond_broadcast (struct condition *, struct lock *);
 bool cmp_cond_priority(struct list_elem *first, struct list_elem *second, void *aux);
 
 /* Optimization barrier.
-
    The compiler will not reorder operations across an
    optimization barrier.  See "Optimization Barriers" in the
    reference guide for more information.*/
