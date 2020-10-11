@@ -60,7 +60,7 @@ static unsigned thread_ticks;   /* # of timer ticks since last yield. */
    Controlled by kernel command-line option "-o mlfqs". */
 bool thread_mlfqs;
 
-extern struct list sleep_list;
+extern struct list sleeping_list;
 
 static void kernel_thread (thread_func *, void *aux);
 
@@ -398,15 +398,15 @@ thread_set_priority (int new_priority)
   if(list_empty(&thread_current()->pot_donors))
   {
     thread_current()->priority = new_priority; 
-    thread_current()->basepriority = new_priority;
+    thread_current()->essentialpriority = new_priority;
   }
   else if(new_priority > thread_current()->priority)
   {
     thread_current()->priority = new_priority;
-    thread_current()->basepriority = new_priority;
+    thread_current()->essentialpriority = new_priority;
   }
   else
-    thread_current()->basepriority = new_priority;
+    thread_current()->essentialpriority = new_priority;
 
   if(!list_empty(&ready_list))
   {
@@ -553,7 +553,7 @@ init_thread (struct thread *t, const char *name, int priority)
     t->priority = priority;
   t->magic = THREAD_MAGIC;
 
-  t->basepriority = priority;
+  t->essentialpriority = priority;
   t->locker = NULL;
   t->blocked = NULL;
   list_init (&t->pot_donors);
@@ -674,6 +674,13 @@ allocate_tid (void)
    Used by switch.S, which can't figure it out on its own. */
 uint32_t thread_stack_ofs = offsetof (struct thread, stack);
 
+/* Returns true if fthread->waketick is less than thread sthread->waketick,
+   false otherwise.
+   When used in list_insert_ordered, a list_elem will be inserted in ascending
+   order according to thread->sleep_ticks. If more than one list_elem have the
+   same sleep_ticks, then insert the new one at the BEGINNING of the list_elems
+   with the same wakeuptick.
+ */ 
 bool 
 cmp_waketick(struct list_elem *first, struct list_elem *second, void *aux)
 {
@@ -684,6 +691,13 @@ cmp_waketick(struct list_elem *first, struct list_elem *second, void *aux)
 
 }
 
+/* Returns true if fthread->waketick is bigger than thread sthread->waketick,
+   false otherwise.
+   When used in list_insert_ordered, a list_elem will be insert in descending
+   order according to thread->priority. If more than one list_elem have the
+   same priority, then insert the new one at the END of the list_elem with the
+   same priority.
+ */ 
 bool 
 cmp_priority(struct list_elem *first, struct list_elem *second, void *aux)
 {

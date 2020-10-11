@@ -20,6 +20,16 @@ Gaurav Aryal <gaurav.aryal@maine.edu>
 >> preparing your submission, other than the Pintos documentation, course
 >> text, lecture notes, and course staff.
 
+I went through many lecture slides from universities provided online.
+Some of them are listed below:
+
+http://www.ccs.neu.edu/home/skotthe/classes/cs5600/fall/2016/notes/pintos-project1.pptx
+http://www.ccs.neu.edu/home/skotthe/classes/cs5600/fall/2016/notes/pintos-project1.pptx
+https://cs.jhu.edu/~huang/cs318/fall17/project/guide.html
+https://github.com/yuan901202/vuw_nwen301_pintos_1.git
+https://www.youtube.com/watch?v=nVUQ4f1-roM
+
+
 			     ALARM CLOCK
 			     ===========
 
@@ -31,7 +41,7 @@ Gaurav Aryal <gaurav.aryal@maine.edu>
 
 Inside struct thread, there are two new elements:
 
-     extern struct list sleep_list;        /*!< List element for sleeping threads list. */
+     extern struct list sleeping_list;        /*!< List element for sleeping threads list. */
      int64_t waketick;					  /*!< Thread stores ticks in int64_t type variable. */
 	 
 As explained in the comment, the first is the element for the sleeping threads list (as
@@ -42,7 +52,7 @@ required by that list), and second is the variable to store number of sleep tick
 >> A2: Briefly describe what happens in a call to timer_sleep(),
 >> including the effects of the timer interrupt handler.
 
-In timer_sleep(), we create a curthread struct for the
+In timer_sleep(), we create a currentthread struct for the
 current thread, and calculate the earliest wake up time (in ticks).  We
 then add this to the global list of sleeping threads, and block the
 thread.
@@ -97,7 +107,7 @@ possible wakeup time, which is absolute and does not need updates.
 
 In thread.h:
 
-  int basepriority;
+  int essentialpriority;
   The effective priority of a thread, which takes into account
   priorities donated by other threads.
 
@@ -132,7 +142,7 @@ We maintain a directed forest over the locks and threads to track
 priority donation. For example, T1 and T2 store L1 in their
 blocked field (and T3, T4 store L2). L1 stores T1, T2 in its
 waiters list, and T5 in its lock field. The
-basepriority field is maintained to be the correct priority using
+essentialpriority field is maintained to be the correct priority using
 the information provided by the graph across all possible operations that
 might change a thread's donated priority: acquiring a lock, releasing a
 lock, and changing a thread's priority.
@@ -191,16 +201,16 @@ struct, it may be avoided using it.
 >> B7: Why did you choose this design?  In what ways is it superior to
 >> another design you considered?
 
-We use the changes of basepriority to indicate 
+We use the changes of essentialpriority to indicate 
 whether or not a thread’s priority is donated. For example, we initialize 
-basepriority to -1 when it is created. Whenever a donation happens, we set it
+essentialpriority to -1 when it is created. Whenever a donation happens, we set it
 to the thread’s priority just before donation happening. We compare the value of 
-priority and basepriority -- if they are different and basepriority has 
+priority and essentialpriority -- if they are different and essentialpriority has 
 been changed from -1 to other value, then it means a donation happened. Thus, 
-basepriority has two functions: 1. store the priority value just before 
+essentialpriority has two functions: 1. store the priority value just before 
 donation; 2. indicate whether or not a donation happened. There will be a problem 
 when priority lower involved: if the new priority is higher than the current 
-donated priority, both priority  and basepriority need to change 
+donated priority, both priority  and essentialpriority need to change 
 to the new priority. 
  
 For struct lock, instead of adding a new memeber in lock, we can get the highest 

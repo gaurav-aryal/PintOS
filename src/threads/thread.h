@@ -98,7 +98,7 @@ struct thread
 
     int64_t waketick;
 
-    int basepriority;
+    int essentialpriority;
 
     struct thread *locker;
 

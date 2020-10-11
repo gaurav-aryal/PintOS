@@ -296,7 +296,7 @@ lock_release (struct lock *lock)
   if(!thread_mlfqs)
   {
     if(list_empty(&thread_current()->pot_donors))
-      thread_set_priority(thread_current()->basepriority);
+      thread_set_priority(thread_current()->essentialpriority);
     else
     {
       struct list_elem *e;
@@ -318,8 +318,8 @@ lock_release (struct lock *lock)
         struct list_elem *max_donor = list_max(&thread_current()->pot_donors, cmp_priority, NULL);
         struct thread *max_donor_thread = list_entry(max_donor, struct thread, donorelem);
 
-        if(thread_current()->basepriority > max_donor_thread->priority)
-          thread_set_priority(thread_current()->basepriority);
+        if(thread_current()->essentialpriority > max_donor_thread->priority)
+          thread_set_priority(thread_current()->essentialpriority);
         else
         {
           thread_current()->priority = max_donor_thread->priority;
@@ -327,7 +327,7 @@ lock_release (struct lock *lock)
         }
       }
       else
-        thread_set_priority(thread_current()->basepriority);
+        thread_set_priority(thread_current()->essentialpriority);
     }
   }
 
@@ -439,6 +439,14 @@ cond_broadcast (struct condition *cond, struct lock *lock)
     cond_signal (cond, lock);
 }
 
+/* Compares the two input semaphore_elem according to their elem's priority and
+   returns true if thread (&fsem->semaphore.waiters), struct thread, elem)->priority is bigger than thread &ssem->semaphore.waiters),
+   struct thread, elem)->->priority, false otherwise.
+   When used in list_insert_ordered, a list_elem will be insert in descending
+   order according to thread->priority. If more than one list_elem have the
+   same priority, then insert the new one at the END of the list_elem with the
+   same priority.
+   */
 bool 
 cmp_cond_priority(struct list_elem *first, struct list_elem *second, void *aux)
 {
