@@ -8,9 +8,8 @@
 
 >> Fill in the names and email addresses of your group members.
 
-FirstName LastName <email@domain.example>
-FirstName LastName <email@domain.example>
-FirstName LastName <email@domain.example>
+Gaurav Aryal <gaurav.aryal1@maine.edu>(XXXX027)
+Gaurav Aryal <gaurav.aryal@maine.edu>(XXXX)
 
 ---- PRELIMINARIES ----
 
@@ -30,20 +29,51 @@ FirstName LastName <email@domain.example>
 >> `struct' member, global or static variable, `typedef', or
 >> enumeration.  Identify the purpose of each in 25 words or less.
 
+None.
+
 ---- ALGORITHMS ----
 
 >> A2: Briefly describe how you implemented argument parsing.  How do
 >> you arrange for the elements of argv[] to be in the right order?
 >> How do you avoid overflowing the stack page?
 
+First, we move the file name to the tokenize function we built that splits the string into spaces and produces a list of arguments.
+Our argv would be made up of this list of arguments and their count gives argc.
+In the load function that is called throughout process_execute,
+we will do this operation. The next step is to pass the procedure on these arguments.
+This can be achieved as it is being generated for the method by moving the values onto the stack.
+We will push the values to the stack in the following order:
+1.Push the values of elements of argv
+2.Push the addresses of these elements from right to left and a sentinel null pointer.
+3.Push argv (address of argv[0])
+4.Push argc
+5.Push a fake return address Once the values are pushed to the stack, the arguments are read by the process in its execution.
+
 ---- RATIONALE ----
 
 >> A3: Why does Pintos implement strtok_r() but not strtok()?
+
+The point where the last token was found is kept internally by the
+function to be used on the next call (particular library implementations
+are not required to avoid data races).
+
+This means that if two threads are calling strtok() in the kernel, there
+is a possible data race where one thread would use the last token held by
+another thread, which would obviously be incorrect and even worse, could
+crash the kernel
 
 >> A4: In Pintos, the kernel separates commands into a executable name
 >> and arguments.  In Unix-like systems, the shell does this
 >> separation.  Identify at least two advantages of the Unix approach.
 
+1. This makes the shell allocate memory for argument parsing, instead of
+the kernel (whose memory is valuable and can't grow too big). If the user
+process runs out of memory, its okay, but if the kernel runs out of
+memory, that might crash the entire system.
+
+2. This allows the shell to do a sanity check of arguments before passing
+control to the kernel (i.e. if the command line is blank or the user
+enters invalid characters).
 			     SYSTEM CALLS
 			     ============
 
